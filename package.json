@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "arweave": "^1.10.23",
+    "arweave": "1.10.18",
     "redstone-smartweave": "^0.4.13"
   }
 }
