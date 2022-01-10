@@ -23,36 +23,34 @@ const initialState = fs.readFileSync(
   "utf8"
 );
 
-const wallet = fs.readFileSync(path.join(__dirname, "./wallet.json"));
+const createWallet = async () => {
+  const wallet = await arweave.wallets.generate();
+  walletAddress = await arweave.wallets.jwkToAddress(wallet);
+  await arweave.api.get(`/mint/${walletAddress}/1000000000000000`);
+
+  return wallet;
+}
 
 const deployContract = async () => {
   console.log("Deploying contract...");
+
+console.log(initialState);
+
+  const wallet = await createWallet();
   const contractTransacionId = await smartweave.createContract.deploy({
-    wallet: JSON.parse(wallet.toString()),
+    wallet: wallet,
     initState: initialState,
     src: contractSrc,
   });
-  fs.writeFileSync("./transactionId.json", { contractTransacionId });
   await mine();
   console.log("Contract deployed!");
-};
-
-const getContract = async () => {
-  const transactionId = getTransactionId();
-  return smartweave.contract(transactionId).connect(wallet);
-};
-
-const getTransactionId = () => {
-  const { contractTransacionId } = JSON.parse(
-    fs.readFileSync("./transactionId.json").toString()
-  );
   return contractTransacionId;
 };
 
 const readState = async () => {
-  const contract = await getContract();
-  const state = await contract.readState();
+  const contractTxId =  await deployContract();
+  const state = await smartweave.contract(contractTxId).readState();
   console.log({ state });
 };
 
-readState();
+readState().finally();
