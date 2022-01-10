@@ -1,0 +1,15 @@
+{
+  "name": "smartweave-contract",
+  "version": "1.0.0",
+  "description": "",
+  "main": "contract.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "arweave": "^1.10.23",
+    "redstone-smartweave": "^0.4.13"
+  }
+}
